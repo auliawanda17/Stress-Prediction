@@ -6,7 +6,7 @@ import joblib
 model = joblib.load('logreg_stress_model.pkl')
 scaler = joblib.load('scaler.pkl')
 
-# ------------------ Daftar Kolom Fitur (dari X.columns saat training) ------------------
+# ------------------ Daftar Kolom Fitur ------------------
 feature_names = ['Gender', 'Study Hours (hrs/week)', 'Part-time Job',
                  'Extracurricular Activities', 'Social Support']
 
@@ -45,25 +45,25 @@ if submit:
     input_data = input_data.reindex(columns=feature_names)
 
     # Validasi input
-if input_data.shape[1] != len(feature_names):
-    st.error("❌ Kolom input tidak cocok dengan model.")
-elif input_data.isnull().values.any():
-    st.error("⚠️ Ada input kosong. Harap isi semua kolom.")
-else:
-    # Normalisasi (tanpa kolom nama)
-    scaled_input = scaler.transform(input_data.values)
-
-    # Prediksi
-    prediction = model.predict(scaled_input)[0]
-
-    # Interpretasi hasil
-    if prediction == 0:
-        level = "Tidak Stres"
-    elif prediction == 1:
-        level = "Stres Ringan"
+    if input_data.shape[1] != len(feature_names):
+        st.error("❌ Kolom input tidak cocok dengan model.")
+    elif input_data.isnull().values.any():
+        st.error("⚠️ Ada input kosong. Harap isi semua kolom.")
     else:
-        level = "Stres Berat"
+        # Normalisasi (tanpa kolom nama)
+        scaled_input = scaler.transform(input_data.values)
 
-    # Tampilkan hasil
-    st.subheader("📊 Hasil Prediksi:")
-    st.success(f"Tingkat stres kamu diprediksi: **{level}** (Label: {prediction})")
+        # Prediksi
+        prediction = model.predict(scaled_input)[0]
+
+        # Interpretasi hasil
+        if prediction == 0:
+            level = "Tidak Stres"
+        elif prediction == 1:
+            level = "Stres Ringan"
+        else:
+            level = "Stres Berat"
+
+        # Tampilkan hasil
+        st.subheader("📊 Hasil Prediksi:")
+        st.success(f"Tingkat stres kamu diprediksi: **{level}** (Label: {prediction})")
