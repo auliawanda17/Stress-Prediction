@@ -45,25 +45,25 @@ if submit:
     input_data = input_data.reindex(columns=feature_names)
 
     # Validasi input
-    if input_data.shape[1] != len(feature_names):
-        st.error("❌ Kolom input tidak cocok dengan model.")
-    elif input_data.isnull().values.any():
-        st.error("⚠️ Ada input kosong. Harap isi semua kolom.")
+if input_data.shape[1] != len(feature_names):
+    st.error("❌ Kolom input tidak cocok dengan model.")
+elif input_data.isnull().values.any():
+    st.error("⚠️ Ada input kosong. Harap isi semua kolom.")
+else:
+    # Normalisasi (tanpa kolom nama)
+    scaled_input = scaler.transform(input_data.values)
+
+    # Prediksi
+    prediction = model.predict(scaled_input)[0]
+
+    # Interpretasi hasil
+    if prediction == 0:
+        level = "Tidak Stres"
+    elif prediction == 1:
+        level = "Stres Ringan"
     else:
-        # Normalisasi dengan scaler
-        scaled_input = scaler.transform(input_data)
+        level = "Stres Berat"
 
-        # Prediksi
-        prediction = model.predict(scaled_input)[0]
-
-        # Interpretasi hasil prediksi (opsional)
-        if prediction == 0:
-            level = "Tidak Stres"
-        elif prediction == 1:
-            level = "Stres Ringan"
-        else:
-            level = "Stres Berat"
-
-        # Tampilkan hasil
-        st.subheader("📊 Hasil Prediksi:")
-        st.success(f"Tingkat stres kamu diprediksi: **{level}** (Label: {prediction})")
+    # Tampilkan hasil
+    st.subheader("📊 Hasil Prediksi:")
+    st.success(f"Tingkat stres kamu diprediksi: **{level}** (Label: {prediction})")
