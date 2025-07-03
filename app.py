@@ -6,7 +6,7 @@ import joblib
 model = joblib.load('logreg_stress_model.pkl')
 scaler = joblib.load('scaler.pkl')
 
-# ------------------ Daftar Kolom Fitur ------------------
+# ------------------ Daftar Kolom Fitur (harus sama saat training) ------------------
 feature_names = ['Gender', 'Study Hours (hrs/week)', 'Part-time Job',
                  'Extracurricular Activities', 'Social Support']
 
@@ -50,7 +50,7 @@ if submit:
     elif input_data.isnull().values.any():
         st.error("⚠️ Ada input kosong. Harap isi semua kolom.")
     else:
-        # Normalisasi (tanpa kolom nama)
+        # Scaling tanpa kolom
         scaled_input = scaler.transform(input_data.values)
 
         # Prediksi
